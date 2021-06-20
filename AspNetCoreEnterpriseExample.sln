@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Catologo.API", "src\ser
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cliente", "Cliente", "{DB6916E3-0495-4E6A-8CD3-D676DCC66F00}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Cliente.API", "src\services\NSE.Cliente.API\NSE.Cliente.API.csproj", "{DC0E31E6-9D87-4442-B0EE-34B3F2F1781F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Clientes.API", "src\services\NSE.Cliente.API\NSE.Clientes.API.csproj", "{DC0E31E6-9D87-4442-B0EE-34B3F2F1781F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pagamento", "Pagamento", "{7917549F-3341-4AC6-9577-0961E53E703A}"
 EndProject
@@ -45,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Pedido.API", "src\servi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.WebApp.MVC.Teste", "src\web\NSE.WebApp.MVC.Teste\NSE.WebApp.MVC.Teste.csproj", "{B67FFADE-C75F-42F3-A29D-485B12FF6DE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSE.WebApi.Core", "src\building blocks\Services\NSE.WebApi.Core\NSE.WebApi.Core.csproj", "{65C1B0ED-97EE-4025-9176-680FF057BE13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.WebApi.Core", "src\building blocks\Services\NSE.WebApi.Core\NSE.WebApi.Core.csproj", "{65C1B0ED-97EE-4025-9176-680FF057BE13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

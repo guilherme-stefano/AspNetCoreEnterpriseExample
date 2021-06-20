@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using NSE.Identidade.Api.Extensions;
 using NSE.Identidade.Api.Models;
 using NSE.WebApi.Core.Identidade;
+using NSE.WebAPI.Core.Controllers;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;

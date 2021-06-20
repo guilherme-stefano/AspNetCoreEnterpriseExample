@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NSE.Catologo.API.Models;
 using NSE.WebApi.Core.Identidade;
+using NSE.WebAPI.Core.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,9 @@ using System.Threading.Tasks;
 
 namespace NSE.Catologo.API.Controllers
 {   
-    
-    [ApiController]
+
     [Authorize]
-    public class CatalogoController : Controller
+    public class CatalogoController : MainController
     {
         private readonly IProdutoRepository _produtoRepository;
 
@@ -32,7 +32,6 @@ namespace NSE.Catologo.API.Controllers
         [HttpGet("catalogo/produtos/{id}")]
         public async Task<Produto> ProdutoDetalhe(Guid id)
         {
-            throw new Exception("Erro!");
             return await _produtoRepository.ObterPorId(id);
         }
     }

@@ -9,6 +9,7 @@ using System;
 using Polly.Extensions.Http;
 using System.Net.Http;
 using Polly.Retry;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
 
 namespace NSE.WebApp.MVC.Configuration
 {
@@ -16,6 +17,8 @@ namespace NSE.WebApp.MVC.Configuration
     {
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<IValidationAttributeAdapterProvider, CpfValidationAttributeAdapterProvider>();
+
 
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
