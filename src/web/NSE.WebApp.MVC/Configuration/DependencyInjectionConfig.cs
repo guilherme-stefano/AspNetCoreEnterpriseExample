@@ -10,6 +10,7 @@ using Polly.Extensions.Http;
 using System.Net.Http;
 using Polly.Retry;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using NSE.WebAPI.Core.Usuario;
 
 namespace NSE.WebApp.MVC.Configuration
 {
@@ -41,7 +42,7 @@ namespace NSE.WebApp.MVC.Configuration
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddScoped<IUser, AspNetUser>();
+            services.AddScoped<IAspNetUser, AspNetUser>();
         }
 
         public class PollyExtensions

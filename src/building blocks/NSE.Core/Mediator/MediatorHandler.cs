@@ -1,10 +1,7 @@
 ﻿using FluentValidation.Results;
-using MediatR;
 using NSE.Core.Messages;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace NSE.Core.Mediator
 {
@@ -24,7 +21,7 @@ namespace NSE.Core.Mediator
 
         public async Task PublicarEvento<T>(T evento) where T : Event
         {
-             await _mediator.Publish(evento);
+            await _mediator.Publish(evento);
         }
     }
 }

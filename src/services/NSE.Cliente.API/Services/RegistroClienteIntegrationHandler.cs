@@ -1,4 +1,6 @@
-﻿using EasyNetQ;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentValidation.Results;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -6,9 +8,6 @@ using NSE.Clientes.API.Application.Commands;
 using NSE.Core.Integration;
 using NSE.Core.Mediator;
 using NSE.MessageBus;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace NSE.Clientes.API.Services
 {
@@ -18,32 +17,43 @@ namespace NSE.Clientes.API.Services
         private readonly IServiceProvider _serviceProvider;
 
         public RegistroClienteIntegrationHandler(
-            IServiceProvider serviceProvider,
-            IMessageBus bus)
-                                                                
+                            IServiceProvider serviceProvider,
+                            IMessageBus bus)
         {
-            _bus = bus;
             _serviceProvider = serviceProvider;
+            _bus = bus;
+        }
+
+        private void SetResponder()
+        {
+            _bus.RespondAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(async request =>
+                await RegistrarCliente(request));
+
+            _bus.AdvancedBus.Connected += OnConnect;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _bus.RespondAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(async request => 
-             await RegistrarCliente(request));
-
+            SetResponder();
             return Task.CompletedTask;
         }
 
+        private void OnConnect(object s, EventArgs e)
+        {
+            SetResponder();
+        }
 
         private async Task<ResponseMessage> RegistrarCliente(UsuarioRegistradoIntegrationEvent message)
         {
             var clienteCommand = new RegistrarClienteCommand(message.Id, message.Nome, message.Email, message.Cpf);
             ValidationResult sucesso;
+
             using (var scope = _serviceProvider.CreateScope())
             {
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediatorHandler>();
                 sucesso = await mediator.EnviarComando(clienteCommand);
             }
+
             return new ResponseMessage(sucesso);
         }
     }
