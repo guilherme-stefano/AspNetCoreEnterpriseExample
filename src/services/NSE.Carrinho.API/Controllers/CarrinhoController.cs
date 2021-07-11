@@ -30,19 +30,26 @@ namespace NSE.Carrinho.API.Controllers
         }
 
         [HttpPost("carrinho")]
-        public async Task<IActionResult> AdicionarItemCarrinho(CarrinhoItem item)
+        public async Task<IActionResult> AdicionarItemCarrinho([FromBody]CarrinhoItem item)
         {
-            var carrinho = await ObterCarrinhoCliente();
+            try
+            {
+                var carrinho = await ObterCarrinhoCliente();
 
-            if (carrinho == null)
-                ManipularNovoCarrinho(item);
-            else
-                ManipularCarrinhoExistente(carrinho, item);
+                if (carrinho == null)
+                    ManipularNovoCarrinho(item);
+                else
+                    ManipularCarrinhoExistente(carrinho, item);
 
-            if (!OperacaoValida()) return CustomResponse();
+                if (!OperacaoValida()) return CustomResponse();
 
-            await PersistirDados();
-            return CustomResponse();
+                await PersistirDados();
+                return CustomResponse();
+            }catch(Exception e)
+            {
+                throw e;
+            }
+
         }
 
         [HttpPut("carrinho/{produtoId}")]

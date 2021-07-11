@@ -37,26 +37,40 @@ namespace NSE.Bff.Compras.Controllers
         [Route("compras/carrinho-quantidade")]
         public async Task<int> ObterQuantidadeCarrinho()
         {
-            var quantidade = await _carrinhoService.ObterCarrinho();
-            return quantidade?.Itens.Sum(i => i.Quantidade) ?? 0;
+            try
+            {
+                var quantidade = await _carrinhoService.ObterCarrinho();
+                return quantidade?.Itens.Sum(i => i.Quantidade) ?? 0;
+            }catch(Exception e)
+            {
+                throw e;
+            }
+
         }
 
         [HttpPost]
         [Route("compras/carrinho/items")]
-        public async Task<IActionResult> AdicionarItemCarrinho(ItemCarrinhoDTO itemProduto)
+        public async Task<IActionResult> AdicionarItemCarrinho([FromBody] ItemCarrinhoDTO itemProduto)
         {
-            var produto = await _catalogoService.ObterPorId(itemProduto.ProdutoId);
+            try
+            {
+                var produto = await _catalogoService.ObterPorId(itemProduto.ProdutoId);
 
-            await ValidarItemCarrinho(produto, itemProduto.Quantidade, true);
-            if (!OperacaoValida()) return CustomResponse();
+                await ValidarItemCarrinho(produto, itemProduto.Quantidade, true);
+                if (!OperacaoValida()) return CustomResponse();
 
-            itemProduto.Nome = produto.Nome;
-            itemProduto.Valor = produto.Valor;
-            itemProduto.Imagem = produto.Imagem;
+                itemProduto.Nome = produto.Nome;
+                itemProduto.Valor = produto.Valor;
+                itemProduto.Imagem = produto.Imagem;
 
-            var resposta = await _carrinhoService.AdicionarItemCarrinho(itemProduto);
+                var resposta = await _carrinhoService.AdicionarItemCarrinho(itemProduto);
 
-            return CustomResponse(resposta);
+                return CustomResponse(resposta);
+            }catch(Exception e)
+            {
+                throw e; 
+            }
+
         }
 
         [HttpPut]
@@ -90,21 +104,21 @@ namespace NSE.Bff.Compras.Controllers
             return CustomResponse(resposta);
         }
 
-        [HttpPost]
-        [Route("compras/carrinho/aplicar-voucher")]
-        public async Task<IActionResult> AplicarVoucher([FromBody] string voucherCodigo)
-        {
-            var voucher = await _pedidoService.ObterVoucherPorCodigo(voucherCodigo);
-            if (voucher is null)
-            {
-                AdicionarErroProcessamento("Voucher inválido ou não encontrado!");
-                return CustomResponse();
-            }
+        //[HttpPost]
+        //[Route("compras/carrinho/aplicar-voucher")]
+        //public async Task<IActionResult> AplicarVoucher([FromBody] string voucherCodigo)
+        //{
+        //    var voucher = await _pedidoService.ObterVoucherPorCodigo(voucherCodigo);
+        //    if (voucher is null)
+        //    {
+        //        AdicionarErroProcessamento("Voucher inválido ou não encontrado!");
+        //        return CustomResponse();
+        //    }
 
-            var resposta = await _carrinhoService.AplicarVoucherCarrinho(voucher);
+        //    var resposta = await _carrinhoService.AplicarVoucherCarrinho(voucher);
 
-            return CustomResponse(resposta);
-        }
+        //    return CustomResponse(resposta);
+        //}
 
         private async Task ValidarItemCarrinho(ItemProdutoDTO produto, int quantidade, bool adicionarProduto = false)
         {

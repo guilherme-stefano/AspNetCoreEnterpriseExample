@@ -55,7 +55,7 @@ namespace NSE.WebApp.MVC.Extensions
 
         private static void HandleCircuitBreakerExceptionAsync(HttpContext context)
         {
-            context.Response.Redirect("/sistema-indisponível");
+            context.Response.Redirect("/sistema-indisponivel");
         }
     }
 }
