@@ -49,7 +49,7 @@ namespace NSE.WebApp.MVC.Configuration
 
 
 
-            services.AddHttpClient<IComparasBffService, ComparasBffService>()
+            services.AddHttpClient<IComprasBffService, ComprasBffService>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
             .AddPolicyHandler(PollyExtensions.EsperarTentar())
             .AddTransientHttpErrorPolicy(

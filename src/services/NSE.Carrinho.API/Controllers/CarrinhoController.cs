@@ -30,26 +30,19 @@ namespace NSE.Carrinho.API.Controllers
         }
 
         [HttpPost("carrinho")]
-        public async Task<IActionResult> AdicionarItemCarrinho([FromBody]CarrinhoItem item)
+        public async Task<IActionResult> AdicionarItemCarrinho(CarrinhoItem item)
         {
-            try
-            {
-                var carrinho = await ObterCarrinhoCliente();
+            var carrinho = await ObterCarrinhoCliente();
 
-                if (carrinho == null)
-                    ManipularNovoCarrinho(item);
-                else
-                    ManipularCarrinhoExistente(carrinho, item);
+            if (carrinho == null)
+                ManipularNovoCarrinho(item);
+            else
+                ManipularCarrinhoExistente(carrinho, item);
 
-                if (!OperacaoValida()) return CustomResponse();
+            if (!OperacaoValida()) return CustomResponse();
 
-                await PersistirDados();
-                return CustomResponse();
-            }catch(Exception e)
-            {
-                throw e;
-            }
-
+            await PersistirDados();
+            return CustomResponse();
         }
 
         [HttpPut("carrinho/{produtoId}")]
@@ -85,6 +78,20 @@ namespace NSE.Carrinho.API.Controllers
             carrinho.RemoverItem(itemCarrinho);
 
             _context.CarrinhoItens.Remove(itemCarrinho);
+            _context.CarrinhoCliente.Update(carrinho);
+
+            await PersistirDados();
+            return CustomResponse();
+        }
+
+        [HttpPost]
+        [Route("carrinho/aplicar-voucher")]
+        public async Task<IActionResult> AplicarVoucher([FromBody]Voucher voucher)
+        {
+            var carrinho = await ObterCarrinhoCliente();
+
+            carrinho.AplicarVoucher(voucher);
+
             _context.CarrinhoCliente.Update(carrinho);
 
             await PersistirDados();

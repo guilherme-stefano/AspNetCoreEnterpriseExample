@@ -21,9 +21,5 @@
     <ProjectReference Include="..\..\building blocks\Services\NSE.WebApi.Core\NSE.WebApi.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
-
 
 </Project>

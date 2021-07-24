@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -8,15 +9,34 @@ using NSE.WebApp.MVC.Models;
 
 namespace NSE.WebApp.MVC.Services
 {
-    public class ComparasBffService : Service, IComparasBffService
+    public interface IComprasBffService
+    {
+        // Carrinho
+        Task<CarrinhoViewModel> ObterCarrinho();
+        Task<int> ObterQuantidadeCarrinho();
+        Task<ResponseResult> AdicionarItemCarrinho(ItemCarrinhoViewModel carrinho);
+        Task<ResponseResult> AtualizarItemCarrinho(Guid produtoId, ItemCarrinhoViewModel carrinho);
+        Task<ResponseResult> RemoverItemCarrinho(Guid produtoId);
+        Task<ResponseResult> AplicarVoucherCarrinho(string voucher);
+
+        //// Pedido
+        //Task<ResponseResult> FinalizarPedido(PedidoTransacaoViewModel pedidoTransacao);
+        //Task<PedidoViewModel> ObterUltimoPedido();
+        //Task<IEnumerable<PedidoViewModel>> ObterListaPorClienteId();
+        //PedidoTransacaoViewModel MapearParaPedido(CarrinhoViewModel carrinho, EnderecoViewModel endereco);
+    }
+
+    public class ComprasBffService : Service, IComprasBffService
     {
         private readonly HttpClient _httpClient;
 
-        public ComparasBffService(HttpClient httpClient, IOptions<AppSettings> settings)
+        public ComprasBffService(HttpClient httpClient, IOptions<AppSettings> settings)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(settings.Value.ComprasBffUrl);
         }
+
+        #region Carrinho
 
         public async Task<CarrinhoViewModel> ObterCarrinho()
         {
@@ -28,20 +48,11 @@ namespace NSE.WebApp.MVC.Services
         }
         public async Task<int> ObterQuantidadeCarrinho()
         {
-            try
-            {
-                var response = await _httpClient.GetAsync("/compras/carrinho-quantidade/");
+            var response = await _httpClient.GetAsync("/compras/carrinho-quantidade/");
 
-                TratarErrosResponse(response);
+            TratarErrosResponse(response);
 
-                return await DeserializarObjetoResponse<int>(response);
-            }
-            catch(Exception e)
-            {
-                throw e;
-            }
- 
-
+            return await DeserializarObjetoResponse<int>(response);
         }
         public async Task<ResponseResult> AdicionarItemCarrinho(ItemCarrinhoViewModel carrinho)
         {
@@ -82,8 +93,9 @@ namespace NSE.WebApp.MVC.Services
             return RetornoOk();
         }
 
+        #endregion
 
-
+        //#region Pedido
 
         //public async Task<ResponseResult> FinalizarPedido(PedidoTransacaoViewModel pedidoTransacao)
         //{
@@ -113,5 +125,35 @@ namespace NSE.WebApp.MVC.Services
 
         //    return await DeserializarObjetoResponse<IEnumerable<PedidoViewModel>>(response);
         //}
+
+        //public PedidoTransacaoViewModel MapearParaPedido(CarrinhoViewModel carrinho, EnderecoViewModel endereco)
+        //{
+        //    var pedido = new PedidoTransacaoViewModel
+        //    {
+        //        ValorTotal = carrinho.ValorTotal,
+        //        Itens = carrinho.Itens,
+        //        Desconto = carrinho.Desconto,
+        //        VoucherUtilizado = carrinho.VoucherUtilizado,
+        //        VoucherCodigo = carrinho.Voucher?.Codigo
+        //    };
+
+        //    if (endereco != null)
+        //    {
+        //        pedido.Endereco = new EnderecoViewModel
+        //        {
+        //            Logradouro = endereco.Logradouro,
+        //            Numero = endereco.Numero,
+        //            Bairro = endereco.Bairro,
+        //            Cep = endereco.Cep,
+        //            Complemento = endereco.Complemento,
+        //            Cidade = endereco.Cidade,
+        //            Estado = endereco.Estado
+        //        };
+        //    }
+
+        //    return pedido;
+        //}
+
+        //#endregion
     }
 }
