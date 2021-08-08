@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using NSE.Clientes.API.Application.Commands;
 using NSE.Core.Integration;
 using NSE.Core.Mediator;
+using NSE.Core.Messages.Integration;
 using NSE.MessageBus;
 
 namespace NSE.Clientes.API.Services

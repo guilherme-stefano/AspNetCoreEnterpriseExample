@@ -1,14 +1,8 @@
-﻿using NSE.Core.Messages;
+﻿using NSE.Core.Integration;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace NSE.Core.Integration
+namespace NSE.Core.Messages.Integration
 {
-    public abstract class IntegrationEvent : Event
-    {
-    }
-
     public class UsuarioRegistradoIntegrationEvent : IntegrationEvent
     {
         public Guid Id { get; private set; }

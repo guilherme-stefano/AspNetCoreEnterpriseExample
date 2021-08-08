@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NSE.Catalogo.API.Models;
 using NSE.Catologo.API.Models;
 using NSE.WebApi.Core.Identidade;
 using NSE.WebAPI.Core.Controllers;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace NSE.Catologo.API.Controllers
-{   
+{
 
     [Authorize]
     public class CatalogoController : MainController
@@ -33,6 +34,12 @@ namespace NSE.Catologo.API.Controllers
         public async Task<Produto> ProdutoDetalhe(Guid id)
         {
             return await _produtoRepository.ObterPorId(id);
+        }
+
+        [HttpGet("catalogo/produtos/lista/{ids}")]
+        public async Task<IEnumerable<Produto>> ObterProdutosPorId(string ids)
+        {
+            return await _produtoRepository.ObterProdutosPorId(ids);
         }
     }
 }

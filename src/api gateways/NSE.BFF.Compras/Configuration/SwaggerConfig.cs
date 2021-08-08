@@ -15,8 +15,8 @@ namespace NSE.Bff.Compras.Configuration.Configuration
                 {
                     Title = "NerdStore Enterprise Compras BFF API Gateway",
                     Description = "Esta API faz parte do curso ASP.NET Core Enterprise Applications.",
-                    Contact = new OpenApiContact() {Name = "Eduardo Pires", Email = "contato@desenvolvedor.io"},
-                    License = new OpenApiLicense() {Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT")}
+                    Contact = new OpenApiContact() { Name = "Eduardo Pires", Email = "contato@desenvolvedor.io" },
+                    License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
                 });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-
+using NSE.Core.Validation;
 
 namespace NSE.Bff.Compras.Models
 {
@@ -44,8 +44,8 @@ namespace NSE.Bff.Compras.Models
         [DisplayName("Nome do Portador")]
         public string NomeCartao { get; set; }
 
-        [RegularExpression(@"(0[1-9]|1[0-2])\/[0-9]{2}", ErrorMessage = "O vencimento deve estar no padrão MM/AA")]
-        //[CartaoExpiracao(ErrorMessage = "Cartão Expirado")]
+        //[RegularExpression(@"(0[1-9]|1[0-2])\/[0-9]{2}", ErrorMessage = "O vencimento deve estar no padrão MM/AA")]
+        [CartaoExpiracao(ErrorMessage = "Cartão Expirado")]
         [Required(ErrorMessage = "Informe o vencimento")]
         [DisplayName("Data de Vencimento MM/AA")]
         public string ExpiracaoCartao { get; set; }

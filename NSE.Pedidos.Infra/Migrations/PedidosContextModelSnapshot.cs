@@ -20,6 +20,77 @@ namespace NSE.Pedidos.Infra.Migrations
                 .HasAnnotation("Relational:Sequence:.MinhaSequencia", "'MinhaSequencia', '', '1000', '1', '', '', 'Int32', 'False'")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("NSE.Pedidos.Domain.Pedidos.Pedido", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("NEXT VALUE FOR MinhaSequencia");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Desconto")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("PedidoStatus")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ValorTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("VoucherId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("VoucherUtilizado")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VoucherId");
+
+                    b.ToTable("Pedidos");
+                });
+
+            modelBuilder.Entity("NSE.Pedidos.Domain.Pedidos.PedidoItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PedidoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProdutoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProdutoImagem")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("ProdutoNome")
+                        .IsRequired()
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ValorUnitario")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
+
+                    b.ToTable("PedidoItems");
+                });
+
             modelBuilder.Entity("NSE.Pedidos.Domain.Voucher", b =>
                 {
                     b.Property<Guid>("Id")
@@ -60,6 +131,62 @@ namespace NSE.Pedidos.Infra.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Vouchers");
+                });
+
+            modelBuilder.Entity("NSE.Pedidos.Domain.Pedidos.Pedido", b =>
+                {
+                    b.HasOne("NSE.Pedidos.Domain.Voucher", "Voucher")
+                        .WithMany()
+                        .HasForeignKey("VoucherId");
+
+                    b.OwnsOne("NSE.Pedidos.Domain.Pedidos.Endereco", "Endereco", b1 =>
+                        {
+                            b1.Property<Guid>("PedidoId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Bairro")
+                                .HasColumnName("Bairro")
+                                .HasColumnType("varchar(100)");
+
+                            b1.Property<string>("Cep")
+                                .HasColumnName("Cep")
+                                .HasColumnType("varchar(100)");
+
+                            b1.Property<string>("Cidade")
+                                .HasColumnName("Cidade")
+                                .HasColumnType("varchar(100)");
+
+                            b1.Property<string>("Complemento")
+                                .HasColumnName("Complemento")
+                                .HasColumnType("varchar(100)");
+
+                            b1.Property<string>("Estado")
+                                .HasColumnName("Estado")
+                                .HasColumnType("varchar(100)");
+
+                            b1.Property<string>("Logradouro")
+                                .HasColumnName("Logradouro")
+                                .HasColumnType("varchar(100)");
+
+                            b1.Property<string>("Numero")
+                                .HasColumnName("Numero")
+                                .HasColumnType("varchar(100)");
+
+                            b1.HasKey("PedidoId");
+
+                            b1.ToTable("Pedidos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PedidoId");
+                        });
+                });
+
+            modelBuilder.Entity("NSE.Pedidos.Domain.Pedidos.PedidoItem", b =>
+                {
+                    b.HasOne("NSE.Pedidos.Domain.Pedidos.Pedido", "Pedido")
+                        .WithMany("PedidoItems")
+                        .HasForeignKey("PedidoId")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

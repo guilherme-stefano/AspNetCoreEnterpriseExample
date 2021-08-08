@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NSE.Core.Integration;
+using NSE.Core.Messages.Integration;
 using NSE.Identidade.Api.Extensions;
 using NSE.Identidade.Api.Models;
 using NSE.MessageBus;

@@ -1,16 +1,16 @@
-﻿using NSE.Core.Data;
-using NSE.Core.DomainObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using NSE.Catologo.API.Models;
+using NSE.Core.Data;
 
-namespace NSE.Catologo.API.Models
+namespace NSE.Catalogo.API.Models
 {
     public interface IProdutoRepository : IRepository<Produto>
     {
         Task<IEnumerable<Produto>> ObterTodos();
         Task<Produto> ObterPorId(Guid id);
+        Task<List<Produto>> ObterProdutosPorId(string ids);
 
         void Adicionar(Produto produto);
         void Atualizar(Produto produto);
