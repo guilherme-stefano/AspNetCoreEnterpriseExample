@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using EasyNetQ;
-using NSE.Core.Integration;
+using NSE.Core.Messages.Integration;
 using Polly;
 using RabbitMQ.Client.Exceptions;
 

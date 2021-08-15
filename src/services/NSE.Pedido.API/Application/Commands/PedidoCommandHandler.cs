@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using FluentValidation.Results;
 using MediatR;
 using NSE.Core.Messages;
+using NSE.Core.Messages.Integration;
+using NSE.MessageBus;
 using NSE.Pedidos.API.Application.DTO;
 using NSE.Pedidos.API.Application.Events;
 using NSE.Pedidos.Domain;
@@ -18,12 +20,16 @@ namespace NSE.Pedidos.API.Application.Commands
     {
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IVoucherRepository _voucherRepository;
+        private readonly IMessageBus _bus;
+
 
         public PedidoCommandHandler(IVoucherRepository voucherRepository, 
-                                    IPedidoRepository pedidoRepository)
+                                    IPedidoRepository pedidoRepository,
+                                    IMessageBus bus)
         {
             _voucherRepository = voucherRepository;
             _pedidoRepository = pedidoRepository;
+            _bus = bus;
         }
 
         public async Task<ValidationResult> Handle(AdicionarPedidoCommand message, CancellationToken cancellationToken)
@@ -43,7 +49,7 @@ namespace NSE.Pedidos.API.Application.Commands
                 if (!ValidarPedido(pedido)) return ValidationResult;
 
                 // Processar pagamento
-                if (!ProcessarPagamento(pedido)) return ValidationResult;
+                if (!await ProcessarPagamento(pedido, message)) return ValidationResult;
 
                 // Se pagamento tudo ok!
                 pedido.AutorizarPedido();
@@ -95,12 +101,12 @@ namespace NSE.Pedidos.API.Application.Commands
                 return false;
             }
 
-            var voucherValidation = new VoucherValidation().Validate(voucher);
-            if (!voucherValidation.IsValid)
-            {
-                voucherValidation.Errors.ToList().ForEach(m => AdicionarErro(m.ErrorMessage));
-                return false;
-            }
+            //var voucherValidation = new VoucherValidation().Validate(voucher);
+            //if (!voucherValidation.IsValid)
+            //{
+            //    voucherValidation.Errors.ToList().ForEach(m => AdicionarErro(m.ErrorMessage));
+            //    return false;
+            //}
 
             pedido.AtribuirVoucher(voucher);
             voucher.DebitarQuantidade();
@@ -132,9 +138,31 @@ namespace NSE.Pedidos.API.Application.Commands
             return true;
         }
 
-        public bool ProcessarPagamento(Pedido pedido)
+        public async Task<bool> ProcessarPagamento(Pedido pedido, AdicionarPedidoCommand message)
         {
-            return true;
+            var pedidoIniciado = new PedidoIniciadoIntegrationEvent
+            {
+                PedidoId = pedido.Id,
+                ClienteId = pedido.ClienteId,
+                Valor = pedido.ValorTotal,
+                TipoPagamento = 1, // fixo. Alterar se tiver mais tipos
+                NomeCartao = message.NomeCartao,
+                NumeroCartao = message.NumeroCartao,
+                MesAnoVencimento = message.ExpiracaoCartao,
+                CVV = message.CvvCartao
+            };
+
+            var result = await _bus
+                .RequestAsync<PedidoIniciadoIntegrationEvent, ResponseMessage>(pedidoIniciado);
+
+            if (result.ValidationResult.IsValid) return true;
+
+            foreach (var erro in result.ValidationResult.Errors)
+            {
+                AdicionarErro(erro.ErrorMessage);
+            }
+
+            return false;
         }
     }
 }

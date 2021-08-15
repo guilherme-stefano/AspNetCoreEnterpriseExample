@@ -1,5 +1,4 @@
-﻿using NSE.Core.Integration;
-using System;
+﻿using System;
 
 namespace NSE.Core.Messages.Integration
 {
