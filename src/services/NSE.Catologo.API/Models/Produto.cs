@@ -1,10 +1,7 @@
-﻿using NSE.Core.DomainObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using NSE.Core.DomainObjects;
 
-namespace NSE.Catologo.API.Models
+namespace NSE.Catalogo.API.Models
 {
     public class Produto : Entity, IAggregateRoot
     {
@@ -15,5 +12,16 @@ namespace NSE.Catologo.API.Models
         public DateTime DataCadastro { get; set; }
         public string Imagem { get; set; }
         public int QuantidadeEstoque { get; set; }
+
+        public void RetirarEstoque(int quantidade)
+        {
+            if (QuantidadeEstoque >= quantidade)
+                QuantidadeEstoque -= quantidade;
+        }
+
+        public bool EstaDisponivel(int quantidade)
+        {
+            return Ativo && QuantidadeEstoque >= quantidade;
+        }
     }
 }

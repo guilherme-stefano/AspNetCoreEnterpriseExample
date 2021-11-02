@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using NSE.Catologo.API.Models;
+using NSE.Catalogo.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

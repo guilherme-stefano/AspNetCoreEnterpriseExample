@@ -2,7 +2,6 @@
 using NSE.Catalogo.API.Data.Repository;
 using NSE.Catalogo.API.Models;
 using NSE.Catologo.API.Data;
-using NSE.Catologo.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

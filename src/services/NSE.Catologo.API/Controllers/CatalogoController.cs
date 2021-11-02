@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NSE.Catalogo.API.Models;
-using NSE.Catologo.API.Models;
 using NSE.WebAPI.Core.Controllers;
 
 namespace NSE.Catalogo.API.Controllers

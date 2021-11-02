@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NSE.Catologo.API.Models;
 using NSE.Core.Data;
 
 namespace NSE.Catalogo.API.Models

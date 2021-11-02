@@ -7,16 +7,20 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["src/web/NSE.WebApp.MVC/NSE.WebApp.MVC.csproj", "src/web/NSE.WebApp.MVC/"]
-RUN dotnet restore "src/web/NSE.WebApp.MVC/NSE.WebApp.MVC.csproj"
+COPY ["./services/NSE.Pedidos.API/NSE.Pedidos.API.csproj", "services/NSE.Pedidos.API/"]
+COPY ["./building blocks/NSE.Core/NSE.Core.csproj", "building blocks/NSE.WebApi.Core/"]
+COPY ["./building blocks/Services/NSE.WebApi.Core/NSE.WebApi.Core.csproj", "building blocks/Services/NSE.WebApi.Core/"]
+COPY ["./building blocks/NSE.MessageBus/NSE.MessageBus.csproj", "building blocks/NSE.MessageBus/"]
+
+RUN dotnet restore "services/NSE.Pedidos.API/NSE.Pedidos.API.csproj"
 COPY . .
-WORKDIR "/src/src/web/NSE.WebApp.MVC"
-RUN dotnet build "NSE.WebApp.MVC.csproj" -c Release -o /app/build
+WORKDIR "services/NSE.Pedidos.API"
+RUN dotnet build "NSE.Pedidos.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "NSE.WebApp.MVC.csproj" -c Release -o /app/publish
+RUN dotnet publish "NSE.Pedidos.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "NSE.WebApp.MVC.dll"]
+ENTRYPOINT ["dotnet", "NSE.Pedidos.API.dll"]

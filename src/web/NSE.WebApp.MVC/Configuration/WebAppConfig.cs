@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSE.WebApp.MVC.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NSE.WebApp.MVC.Configuration
 {
@@ -19,22 +17,31 @@ namespace NSE.WebApp.MVC.Configuration
         {
             services.AddControllersWithViews();
 
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"/var/data_protection_keys/"))
+                .SetApplicationName("   AspNetCoreEnterpriseExample");
+
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
+
             services.Configure<AppSettings>(configuration);
         }
 
         public static void UseMvcConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
+
             //if (env.IsDevelopment())
             //{
             //    app.UseDeveloperExceptionPage();
             //}
             //else
             //{
-            //    app.UseExceptionHandler("/erro/500");
-            //    app.UseStatusCodePagesWithRedirects("/error/{0}");
-            //    app.UseHsts();
-            //}
 
+            //}
 
             app.UseExceptionHandler("/erro/500");
             app.UseStatusCodePagesWithRedirects("/erro/{0}");
@@ -54,7 +61,6 @@ namespace NSE.WebApp.MVC.Configuration
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
             });
-
 
             app.UseMiddleware<ExceptionMiddleware>();
 

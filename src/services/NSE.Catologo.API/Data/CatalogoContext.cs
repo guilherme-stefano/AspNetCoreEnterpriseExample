@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NSE.Catologo.API.Models;
+using NSE.Catalogo.API.Models;
 using NSE.Core.Data;
 using NSE.Core.Messages;
 using System;

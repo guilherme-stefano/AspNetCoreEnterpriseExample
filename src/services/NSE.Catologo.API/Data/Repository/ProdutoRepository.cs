@@ -7,7 +7,6 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 using NSE.Core.Data;
 using NSE.Catologo.API.Data;
-using NSE.Catologo.API.Models;
 
 namespace NSE.Catalogo.API.Data.Repository
 {
